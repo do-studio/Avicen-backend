@@ -75,7 +75,10 @@ const loginUser = async (req, res) => {
 };
 
 const logoutUser = async (req, res) => {
-  res.clearCookie("user_token");
+  // Must use the same attributes the cookie was set with (minus maxAge), otherwise
+  // browsers ignore the cross-site removal and the user stays logged in.
+  const { maxAge, ...clearConfig } = cookieConfig;
+  res.clearCookie("user_token", clearConfig);
 
   res.status(200).json({ msg: "Logged out Successfully" });
 };
